@@ -3,22 +3,26 @@ let onPin1 = false
 let onPin0 = false
 let time = 0
 pins.analogSetPitchPin(AnalogPin.P8)
+
 input.onPinPressed(TouchPin.P0, () => {
-    if (onPin0 == true) {
-        onPin0 = false
-    } else {
-        onPin0 = true
-    }
+    onPin0 = true
+
 })
 input.onPinPressed(TouchPin.P1, () => {
-    if (onPin1 == true) {
-        onPin1 = false
-    } else {
-        onPin1 = true
-    }
+    onPin1 = true
 })
+
+input.onPinPressed(TouchPin.P2, () => {
+    onPin2 = true
+})
+
 basic.forever(() => {
-    basic.pause(2000)
+    if (onPin1 || onPin2 || onPin0) {
+        for (let i = 0; i <= 20; i++) {
+            basic.pause(100);
+        }
+
+    }
     if (onPin0 == false && onPin1 == false && onPin2 == false) {
         basic.showLeds(`
             . . . . .
@@ -113,14 +117,7 @@ basic.forever(() => {
         reset()
     }
 })
-input.onPinPressed(TouchPin.P2, () => {
-    if (onPin2 == true) {
-        onPin2 = false
-    } else {
-        onPin2 = true
-    }
-})
-time = 1000
+
 function reset() {
     onPin0 = false
     onPin1 = false
