@@ -1,0 +1,56 @@
+let die1 = 0
+let die2 = 0
+let die3 = 0
+let diceP2 = 0
+let strength = 0
+let p1v = 0
+
+input.onButtonPressed(Button.AB, () => {
+    basic.showArrow(ArrowNames.West)
+})
+radio.onDataPacketReceived(({receivedNumber: p1s}) => {
+    p1v = p1s
+})
+input.onButtonPressed(Button.B, () => {
+    basic.showArrow(ArrowNames.West)
+})
+input.onGesture(Gesture.Shake, () => {
+    strength = input.acceleration(Dimension.Strength)
+    if (strength <= 2500) {
+        die1 = Math.random(3) + 1
+        die2 = Math.random(3) + 1
+        die3 = Math.random(3) + 1
+    } else {
+        die1 = Math.random(3) + 4
+        die2 = Math.random(3) + 4
+        die3 = Math.random(3) + 4
+    }
+    basic.showNumber(die1)
+    basic.pause(500)
+    basic.showNumber(die2)
+    basic.pause(500)
+    basic.showNumber(die3)
+    diceP2 = die1 + die2 + die3
+    basic.clearScreen()
+    basic.pause(500)
+    basic.showNumber(diceP2)
+    radio.sendValue("p2v", diceP2)
+    basic.showArrow(ArrowNames.West)
+})
+input.onButtonPressed(Button.A, () => {
+    if (diceP2 < p1v) {
+        basic.showString("p1w")
+    } else {
+        if (p1v == 0 && diceP2 == 0) {
+            basic.showString("SHAKE ME!")
+        } else {
+            if (diceP2 == p1v) {
+                basic.showString("=")
+            } else {
+                basic.showString("p2w")
+            }
+        }
+    }
+})
+radio.setGroup(1)
+basic.showString("SHAKE!")
