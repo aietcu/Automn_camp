@@ -1,0 +1,32 @@
+let line = 0
+let sumA = 0
+function ledClear() {
+   control.waitMicros(100000)
+   for (let k = 0; k <= 4; k++) {
+       led.unplot(k, line)
+   }
+}
+basic.forever(() => {
+   // led.plot(0, line) control.waitMicros(1000000)
+   // led.plot(1, line) led.unplot(0, line)
+   // control.waitMicros(1000000) led.unplot(1, line)
+   ledBlink()
+   input.onButtonPressed(Button.A, () => {
+       ledClear()
+       sumA = sumA + 1
+   })
+})
+function ledBlink() {
+   for (let i = 0; i <= 4; i++) {
+       led.plot(i, line)
+       control.waitMicros(75000)
+   }
+   for (let j = 0; j <= 4; j++) {
+       led.unplot(j, line)
+       control.waitMicros(75000)
+   }
+}
+function plotSum() {
+
+}
+sumA = 0
