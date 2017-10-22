@@ -14,27 +14,25 @@ function laneDevide(offsetY: number) {
 }
 
 function pickLaneForNormalCar() {
-    let pick = Math.random(4)
-    if (pick < 3) {
+    let pick = Math.random(255) % 5
+    if (pick < 2) {
         return 0;
     } else {
         return 3;
     }
 }
 
-function crashAnimation() {
-
-}
-
-let refreshSpeed = 700;
+let refreshSpeed = 850;
+let carSpeed = 0;
 let laneSideForPlayer = 0;
 let laneSideForTrafficCar = pickLaneForNormalCar();
 
 let playerCar = new SimultatedCar();
 let trafficCar = new SimultatedCar();
 let counter = 0;
-
-let isGameOver = false;
+let numberOfCars = 0;
+let isGameOver = true;
+let brake = false;
 
 input.onButtonPressed(Button.A, () => {
     laneSideForPlayer = 0;
@@ -55,6 +53,12 @@ basic.forever(() => {
     if (isGameOver == false) {
         // cleanup the screen
         basic.clearScreen();
+        if (brake) {
+            carSpeed = refreshSpeed;
+        } else {
+            carSpeed = refreshSpeed - (game.level() * 100);
+        }
+
         if (counter % 5 == 0) {
             laneSideForTrafficCar = pickLaneForNormalCar();
         }
@@ -66,15 +70,26 @@ basic.forever(() => {
         // render the racer
         playerCar.render(laneSideForPlayer, 3);
         // check collision
+        if (counter % 5 == 3 && laneSideForTrafficCar != laneSideForPlayer) {
+            let points = game.level() * 1
+            game.addScore(points);
+            numberOfCars += 1;
+            if (numberOfCars == 10) {
+                game.levelUp();
+                numberOfCars = 0;
+            }
+        }
         if (counter % 5 == 3 && laneSideForTrafficCar == laneSideForPlayer) {
             isGameOver = true;
+            game.showScore()
+            game.gameOver()
         }
 
         // increase the counters
-        basic.pause(refreshSpeed);
+        basic.pause(carSpeed);
         counter++;
     } else {
-        basic.showString("START!")
+        basic.showString("START!");
         counter = 0;
         laneSideForTrafficCar = pickLaneForNormalCar();
     }
