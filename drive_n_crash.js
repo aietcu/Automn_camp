@@ -35,10 +35,19 @@ let isGameOver = true;
 let brake = false;
 
 input.onButtonPressed(Button.A, () => {
-    laneSideForPlayer = 0;
+    if (laneSideForPlayer == 3){
+        laneSideForPlayer = 0;
+    } else {
+        laneSideForPlayer = 3;
+    }
 })
+
 input.onButtonPressed(Button.B, () => {
-    laneSideForPlayer = 3;
+    if (laneSideForPlayer == 0) {
+        laneSideForPlayer = 3;
+    } else {
+        laneSideForPlayer = 0;
+    }    
 })
 
 input.onPinPressed(TouchPin.P0, () => {
