@@ -1,12 +1,4 @@
-class LaneDivider {
-    render(offsetY: number) {
-        led.plot(2, 0 + offsetY);
-        led.plot(2, 2 + offsetY);
-        led.plot(2, 4 + offsetY);
-    }
-}
-
-class RacingCar {
+class SimultatedCar {
     render(offsetX: number, offsetY: number) {
         led.plot(offsetX, offsetY);
         led.plot(offsetX + 1, offsetY);
@@ -15,11 +7,10 @@ class RacingCar {
     }
 }
 
-function playerCar(offsetX: number, offsetY: number) {
-    led.plot(offsetX, offsetY);
-    led.plot(offsetX + 1, offsetY);
-    led.plot(offsetX, offsetY + 1);
-    led.plot(offsetX + 1, offsetY + 1);
+function laneDevide(offsetY: number) {
+    led.plot(2, 0 + offsetY);
+    led.plot(2, 2 + offsetY);
+    led.plot(2, 4 + offsetY);
 }
 
 function pickLaneForNormalCar() {
@@ -36,21 +27,20 @@ function crashAnimation() {
 }
 
 let refreshSpeed = 700;
-let laneSideForRacer = 0;
-let laneSideForNormalCar = pickLaneForNormalCar();
+let laneSideForPlayer = 0;
+let laneSideForTrafficCar = pickLaneForNormalCar();
 
-let laneDivider = new LaneDivider();
-let racingCar = new RacingCar();
-let normalCar = new RacingCar();
+let playerCar = new SimultatedCar();
+let trafficCar = new SimultatedCar();
 let counter = 0;
 
 let isGameOver = false;
 
 input.onButtonPressed(Button.A, () => {
-    laneSideForRacer = 0;
+    laneSideForPlayer = 0;
 })
 input.onButtonPressed(Button.B, () => {
-    laneSideForRacer = 3;
+    laneSideForPlayer = 3;
 })
 
 input.onPinPressed(TouchPin.P0, () => {
@@ -66,17 +56,17 @@ basic.forever(() => {
         // cleanup the screen
         basic.clearScreen();
         if (counter % 5 == 0) {
-            laneSideForNormalCar = pickLaneForNormalCar();
+            laneSideForTrafficCar = pickLaneForNormalCar();
         }
 
         // render the lane
-        laneDivider.render(counter % 2);
-        // render the normal car at
-        normalCar.render(laneSideForNormalCar, counter % 5);
+        laneDevide(counter % 2);
+        // render the traffic car at
+        trafficCar.render(laneSideForTrafficCar, counter % 5);
         // render the racer
-        playerCar(laneSideForRacer, 3);
+        playerCar.render(laneSideForPlayer, 3);
         // check collision
-        if (counter % 5 == 3 && laneSideForNormalCar == laneSideForRacer) {
+        if (counter % 5 == 3 && laneSideForTrafficCar == laneSideForPlayer) {
             isGameOver = true;
         }
 
@@ -86,6 +76,6 @@ basic.forever(() => {
     } else {
         basic.showString("START!")
         counter = 0;
-        laneSideForNormalCar = pickLaneForNormalCar();
+        laneSideForTrafficCar = pickLaneForNormalCar();
     }
 })
