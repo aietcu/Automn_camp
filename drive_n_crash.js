@@ -35,7 +35,7 @@ let isGameOver = true;
 let brake = false;
 
 input.onButtonPressed(Button.A, () => {
-    if (laneSideForPlayer == 3){
+    if (laneSideForPlayer == 3) {
         laneSideForPlayer = 0;
     } else {
         laneSideForPlayer = 3;
@@ -47,11 +47,16 @@ input.onButtonPressed(Button.B, () => {
         laneSideForPlayer = 3;
     } else {
         laneSideForPlayer = 0;
-    }    
+    }
 })
 
 input.onPinPressed(TouchPin.P0, () => {
-    isGameOver = false;
+    if (brake) {
+        brake = false;
+    } else {
+        brake = true;
+    }
+
 })
 
 input.onButtonPressed(Button.AB, () => {
@@ -81,10 +86,13 @@ basic.forever(() => {
         // check collision
         if (counter % 5 == 3 && laneSideForTrafficCar != laneSideForPlayer) {
             let points = game.level() * 1
-            game.addScore(points);
+            // game.addScore(points);
+            game.setScore(game.score() + points);
             numberOfCars += 1;
             if (numberOfCars == 10) {
+                basic.clearScreen();
                 game.levelUp();
+                brake = false;
                 numberOfCars = 0;
             }
         }
@@ -98,7 +106,16 @@ basic.forever(() => {
         basic.pause(carSpeed);
         counter++;
     } else {
-        basic.showString("START!");
+        basic.showString("GO!");
+        basic.clearScreen();
+        basic.showLeds(`
+                        . . . . .
+                        . # . # .
+                        # . . . #
+                        . # . # .
+                        . . . . .
+                        `);
+        basic.clearScreen();                
         counter = 0;
         laneSideForTrafficCar = pickLaneForNormalCar();
     }
