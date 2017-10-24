@@ -4,11 +4,12 @@ let lizzard: Image = null
 let scissors: Image = null
 let paper: Image = null
 let rock: Image = null
-let p1 = 0
-let p2 = 0
-let r2 = 0
+let p1 = -1
+let p2 = -1
+let r2 = -1
 let pause = false
-let r1 = 0
+let r1 = -1
+
 basic.forever(() => {
     if (pause) {
         showImage(paused)
@@ -40,29 +41,33 @@ function p2Animation() {
 input.onButtonPressed(Button.B, () => {
     led.stopAnimation()
     basic.clearScreen()
-    basic.showString(" P2 ")
+    basic.showString(" P2: ")
     r2 = input.compassHeading()
     if (r2 > 225 && r2 <= 315) {
         p2 = 5
     } else {
         p2 = Math.random(3)
     }
-    basic.pause(250)
     switch (p2) {
-        case 0: showImage(rock)
+        case 0:
+            showSelectedImage(rock)
             break;
-        case 1: showImage(paper)
+        case 1:
+            showSelectedImage(paper)
             break;
-        case 2: showImage(scissors)
+        case 2:
+            showSelectedImage(scissors)
             break;
-        case 3: showImage(lizzard)
-            control.waitMicros(25000)
+        case 3:
+            showImage(lizzard)
+            control.waitMicros(50000)
             led.fadeOut()
-            control.waitMicros(25000)
+            control.waitMicros(50000)
             images.arrowImage(ArrowNames.South)
             led.fadeIn()
             break;
-        case 5: showImage(spock)
+        case 5:
+            showImage(spock)
             break;
     }
     basic.showString(" SHAKE ME!")
@@ -111,7 +116,7 @@ input.onButtonPressed(Button.AB, () => {
 input.onButtonPressed(Button.A, () => {
     led.stopAnimation()
     basic.clearScreen()
-    basic.showString(" P1 ")
+    basic.showString(" P1: ")
     r1 = input.compassHeading()
     if (r1 >= 45 && r1 < 136) {
         p1 = 3
@@ -120,27 +125,26 @@ input.onButtonPressed(Button.A, () => {
     }
     basic.pause(250)
     switch (p1) {
-        case 0: showImage(rock)
+        case 0:
+            showImage(rock);
             break;
-        case 1: showImage(paper)
+        case 1:
+            showImage(paper);
             break;
-        case 2: showImage(scissors)
+        case 2:
+            showImage(scissors);
             break;
-        case 3: showImage(lizzard)
-            control.waitMicros(25000)
-            led.fadeOut()
-            control.waitMicros(25000)
-            images.arrowImage(ArrowNames.North)
-            led.fadeIn()
+        case 3:
+            showImage(lizzard);
+            control.waitMicros(25000);
+            led.fadeOut();
+            control.waitMicros(25000);
+            images.arrowImage(ArrowNames.North);
+            led.fadeIn();
             break;
     }
 })
-r1 = -1
-r2 = -1
-p2 = -1
-p1 = -1
-p1 = -1
-p2 = -1
+
 rock = images.createImage(`
     . . # . .
     . # # # .
@@ -184,8 +188,18 @@ paused = images.createImage(`
     . # . # .
     `)
 function showImage(image: Image) {
+    led.stopAnimation()
+    basic.clearScreen()
     image.showImage(0)
     control.waitMicros(100000)
+}
+
+function showSelectedImage(image: Image) {
+    image.showImage(0)
+    control.waitMicros(75000)
+    led.fadeOut()
+    control.waitMicros(75000)
+    led.fadeIn()
 }
 basic.clearScreen()
 basic.pause(500)
