@@ -42,7 +42,7 @@ input.onButtonPressed(Button.B, () => {
     basic.clearScreen()
     basic.showString(" P2 ")
     r2 = input.compassHeading()
-    if (r2 > 180 && r2 <= 360) {
+    if (r2 > 225 && r2 <= 315) {
         p2 = 5
     } else {
         p2 = Math.random(3)
@@ -113,7 +113,7 @@ input.onButtonPressed(Button.A, () => {
     basic.clearScreen()
     basic.showString(" P1 ")
     r1 = input.compassHeading()
-    if (r1 >= 0 && r1 < 181) {
+    if (r1 >= 45 && r1 < 136) {
         p1 = 3
     } else {
         p1 = Math.random(3)
